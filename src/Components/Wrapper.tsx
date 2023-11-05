@@ -6,7 +6,7 @@ type Props = {
 
 const Wrapper = ({ children }: Props) => {
   return (
-    <div className="w-full md:w-2/4 mx-auto flex flex-col  px-3 py-7">
+    <div className="w-full max-h-[80%] overflow-y-auto md:w-2/4 mx-auto flex flex-col  px-3 py-7">
       {children}
     </div>
   );

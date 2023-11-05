@@ -1,7 +1,14 @@
 import React, { useState } from "react";
+import utils from "../../utils";
+import { ITodo } from "../../types";
 
-const Input = () => {
-  const [data, setData] = useState({
+type Props = {
+  add: (data: ITodo) => void;
+};
+
+const Input = ({ add }: Props) => {
+  const [data, setData] = useState<ITodo>({
+    id: utils.genId(),
     completed: false,
     content: "",
   });
@@ -12,19 +19,35 @@ const Input = () => {
     const key = target.name;
     const value = target.value;
 
-    if (target.name === "completed" && target.checked) {
-      setData({ ...data, completed: true });
-    } else setData({ ...data, [key]: value });
+    // if (target.name === "completed" && target.checked) {
+    //   setValue(true);
+    //   setData({ ...data, completed: true });
+    // } else
+
+    setData({ ...data, [key]: value });
+  };
+
+  const handleSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+
+    setData({ ...data, completed: checked });
+  };
+
+  const handleClick = () => {
+    setData({ ...data, completed: !data.completed });
   };
 
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(data);
+    if (data.content.length) {
+      add({ ...data, id: utils.genId() });
 
-    setData({
-      completed: false,
-      content: "",
-    });
+      setData({
+        id: "",
+        completed: false,
+        content: "",
+      });
+    }
   };
 
   return (
@@ -32,7 +55,7 @@ const Input = () => {
       <form
         onSubmit={handleSubmit}
         action=""
-        className="flex flex-col w-full p-3 rounded-md"
+        className="flex flex-col w-full p-3 py-1 rounded-md bg-gray-100"
       >
         <div className="flex flex-row gap-x-3">
           <input
@@ -40,8 +63,10 @@ const Input = () => {
             name="completed"
             id="completed"
             className="w-4"
-            value={""}
-            onChange={handleChange}
+            value={data.completed ? "" : ""}
+            checked={data.completed}
+            onChange={handleSelection}
+            onClick={handleClick}
           />
           <input
             type="text"
@@ -49,7 +74,7 @@ const Input = () => {
             name="content"
             value={data.content}
             onChange={handleChange}
-            className={`flex flex-1 w-full focus:outline-none px-3 rounded-md py-2 `}
+            className={`flex flex-1 w-full focus:outline-none px-3 bg-transparent rounded-md py-2 `}
             placeholder="Add A Todo..."
           />
         </div>
