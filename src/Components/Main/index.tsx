@@ -5,6 +5,12 @@ import CardWrapper from "../Card/CardWrapper";
 import Card from "../Card";
 import todo from "../../services/todo";
 import { ITodo } from "../../types";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
 
 const Main = () => {
   const [todos, setTodos] = useState<ITodo[]>([]);
@@ -22,13 +28,19 @@ const Main = () => {
   const renderTodos = () => {
     return (
       (todos?.length > 0 &&
-        todos?.map((todo) => (
-          <Card
-            update={update}
-            remove={handleDelete}
-            todo={todo}
-            key={todo.id}
-          />
+        todos?.map((todo, idx) => (
+          <Draggable key={todo.id} draggableId={todo.id} index={idx}>
+            {(provided) => (
+              <Card
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                update={update}
+                remove={handleDelete}
+                todo={todo}
+              />
+            )}
+          </Draggable>
         ))) || <div></div>
     );
   };
@@ -49,11 +61,31 @@ const Main = () => {
     setTodos(newList);
   };
 
+  const onDragEnd = (result: DropResult) => {
+    console.log(result);
+    if (!result.destination) return;
+
+    const items = Array.from(todos);
+    const [reorderedItems] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItems);
+
+    setTodos(items);
+  };
+
   return (
     <Wrapper>
       <Input add={handleNewTodo} />
       <div className="">
-        <CardWrapper>{renderTodos()}</CardWrapper>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="todos">
+            {(provided) => (
+              <CardWrapper {...provided.droppableProps} ref={provided.innerRef}>
+                <>{renderTodos()}</>
+                <>{provided.placeholder}</>
+              </CardWrapper>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
     </Wrapper>
   );

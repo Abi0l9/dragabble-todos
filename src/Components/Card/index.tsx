@@ -7,9 +7,10 @@ type Props = {
   todo: ITodo;
   update: (id: string) => void;
   remove: (id: string) => void;
+  ref: (element: HTMLElement | null) => void;
 };
 
-const Card = ({ todo, update, remove }: Props) => {
+const Card = ({ todo, update, remove, ref }: Props) => {
   const { id, content, completed } = todo;
   const [value, setValue] = useState(false);
 
@@ -20,7 +21,10 @@ const Card = ({ todo, update, remove }: Props) => {
   };
 
   return (
-    <div className="w-full flex flex-row items-center gap-x-3  bg-gray-100  p-2 rounded-md">
+    <div
+      ref={ref}
+      className="w-full flex flex-row items-center gap-x-3  bg-gray-100  p-2 rounded-md"
+    >
       <input
         type="radio"
         id={id}
