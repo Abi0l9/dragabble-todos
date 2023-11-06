@@ -10,9 +10,10 @@ type Props = {
   updateTodo: (id: string) => void;
   addNewTodo: (data: ITodo) => void;
   deleteTodo: (id: string) => void;
-  dragTodo: (_e: React.DragEvent<HTMLDivElement>, item: ITodo) => void;
+  dragTodo: (item: ITodo) => void;
   dragOverTodo: (e: React.DragEvent<HTMLDivElement>) => void;
-  dropTodo: (_e: React.DragEvent<HTMLDivElement>, targetItem: ITodo) => void;
+  dropTodo: (targetItem: ITodo) => void;
+  touchDrag: (e: React.TouchEvent<HTMLDivElement>) => void;
   todos: ITodo[];
   getAll: (state: State) => void;
   clear: () => void;
@@ -25,6 +26,7 @@ const Main = ({
   dragTodo,
   dragOverTodo,
   dropTodo,
+  touchDrag,
   todos,
   getAll,
   clear,
@@ -41,6 +43,7 @@ const Main = ({
             onDragStart={dragTodo}
             onDragOver={dragOverTodo}
             onDrop={dropTodo}
+            onTouchDrag={touchDrag}
             key={todo.id}
             update={update}
             remove={handleDelete}

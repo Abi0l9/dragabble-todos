@@ -9,9 +9,10 @@ type Props = {
   todo: ITodo;
   update: (id: string) => void;
   remove: (id: string) => void;
-  onDragStart: (e: React.DragEvent<HTMLDivElement>, item: ITodo) => void;
+  onDragStart: (item: ITodo) => void;
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDrop: (e: React.DragEvent<HTMLDivElement>, targetItem: ITodo) => void;
+  onDrop: (targetItem: ITodo) => void;
+  onTouchDrag: (e: React.TouchEvent<HTMLDivElement>) => void;
 };
 
 const Card = ({
@@ -21,6 +22,7 @@ const Card = ({
   onDragStart,
   onDragOver,
   onDrop,
+  onTouchDrag,
 }: Props) => {
   const { id, content, completed } = todo;
   const [value, setValue] = useState(false);
@@ -35,9 +37,11 @@ const Card = ({
   return (
     <div
       draggable={true}
-      onDragStart={(e) => onDragStart(e, todo)}
+      onDragStart={() => onDragStart(todo)}
       onDragOver={onDragOver}
-      onDrop={(e) => onDrop(e, todo)}
+      onDrop={() => onDrop(todo)}
+      onTouchStart={() => onDragStart(todo)}
+      onTouchMove={onTouchDrag}
       className={`w-full flex flex-row items-center gap-x-3 cursor-pointer   ${
         theme === "dark" ? "bg-gray-800" : "bg-white"
       }  p-2`}

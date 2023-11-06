@@ -41,10 +41,7 @@ const Layout = () => {
     setTodos(newList);
   };
 
-  const handleDragStart = (
-    _e: React.DragEvent<HTMLDivElement>,
-    item: ITodo
-  ) => {
+  const handleDragStart = (item: ITodo) => {
     setDraggedItem(item);
   };
 
@@ -52,10 +49,12 @@ const Layout = () => {
     e.preventDefault();
   };
 
-  const handleDrop = (
-    _e: React.DragEvent<HTMLDivElement>,
-    targetItem: ITodo
-  ) => {
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    // e.preventDefault();
+    console.log(e);
+  };
+
+  const handleDrop = (targetItem: ITodo) => {
     const updatedTodos = [...todos];
     const draggedIndex = updatedTodos.findIndex(
       (todo) => todo.id === draggedItem.id
@@ -120,6 +119,7 @@ const Layout = () => {
         dragTodo={handleDragStart}
         dragOverTodo={handleDragOver}
         dropTodo={handleDrop}
+        touchDrag={handleTouchMove}
         clear={clear}
       />
       <Footer />
