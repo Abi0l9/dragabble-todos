@@ -1,24 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Input from "./Input";
 import Wrapper from "../Wrapper";
 import CardWrapper from "../Card/CardWrapper";
 import Card from "../Card";
-import todo from "../../services/todo";
 import { ITodo } from "../../types";
-// import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 
-const Main = () => {
-  const [todos, setTodos] = useState<ITodo[]>([]);
-  const [draggedItem, setDraggedItem] = useState<ITodo>({} as ITodo);
+type Props = {
+  updateTodo: (id: string) => void;
+  addNewTodo: (data: ITodo) => void;
+  deleteTodo: (id: string) => void;
+  dragTodo: (_e: React.DragEvent<HTMLDivElement>, item: ITodo) => void;
+  dragOverTodo: (e: React.DragEvent<HTMLDivElement>) => void;
+  dropTodo: (_e: React.DragEvent<HTMLDivElement>, targetItem: ITodo) => void;
+  todos: ITodo[];
+};
 
-  useEffect(() => {
-    const data = todo.retrieveTodos();
-    setTodos(data);
-  }, [setTodos]);
-
+const Main = ({
+  updateTodo,
+  addNewTodo,
+  deleteTodo,
+  dragTodo,
+  dragOverTodo,
+  dropTodo,
+  todos,
+}: Props) => {
   const update = (id: string) => {
-    const data = todo.updateTodo(id);
-    setTodos(data);
+    updateTodo(id);
   };
 
   const renderTodos = () => {
@@ -26,9 +33,9 @@ const Main = () => {
       (todos?.length > 0 &&
         todos?.map((todo) => (
           <Card
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
+            onDragStart={dragTodo}
+            onDragOver={dragOverTodo}
+            onDrop={dropTodo}
             key={todo.id}
             update={update}
             remove={handleDelete}
@@ -39,50 +46,11 @@ const Main = () => {
   };
 
   const handleNewTodo = (data: ITodo) => {
-    if (todos?.length) {
-      const addedList = [data, ...todos];
-      todo.addTodo(addedList);
-      setTodos(addedList);
-    } else {
-      todo.addTodo([data]);
-      setTodos([data]);
-    }
+    addNewTodo(data);
   };
 
   const handleDelete = (id: string) => {
-    const newList = todo.deleteTodo(id);
-    setTodos(newList);
-  };
-
-  const handleDragStart = (
-    _e: React.DragEvent<HTMLDivElement>,
-    item: ITodo
-  ) => {
-    setDraggedItem(item);
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (
-    _e: React.DragEvent<HTMLDivElement>,
-    targetItem: ITodo
-  ) => {
-    const updatedTodos = [...todos];
-    const draggedIndex = updatedTodos.findIndex(
-      (todo) => todo.id === draggedItem.id
-    );
-    const targetIndex = updatedTodos.findIndex(
-      (todo) => todo.id === targetItem.id
-    );
-
-    updatedTodos[draggedIndex] = targetItem;
-    updatedTodos[targetIndex] = draggedItem;
-    todo.addTodo(updatedTodos);
-    setTodos(updatedTodos);
-
-    setDraggedItem({} as ITodo);
+    deleteTodo(id);
   };
 
   return (

@@ -36,12 +36,12 @@ const Card = ({
       onDragStart={(e) => onDragStart(e, todo)}
       onDragOver={onDragOver}
       onDrop={(e) => onDrop(e, todo)}
-      className="w-full flex flex-row items-center gap-x-3  bg-gray-100  p-2 rounded-md"
+      className="w-full flex flex-row items-center gap-x-3 cursor-pointer  bg-gray-100  p-2 rounded-md"
     >
       <input
         type="radio"
         id={id}
-        className="rounded-full"
+        className="rounded-full cursor-pointer"
         checked={completed}
         value={value ? "" : ""}
         onClick={() => update(id)}
