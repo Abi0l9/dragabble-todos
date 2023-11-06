@@ -5,15 +5,11 @@ import CardWrapper from "../Card/CardWrapper";
 import Card from "../Card";
 import todo from "../../services/todo";
 import { ITodo } from "../../types";
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-} from "react-beautiful-dnd";
+// import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 
 const Main = () => {
   const [todos, setTodos] = useState<ITodo[]>([]);
+  const [draggedItem, setDraggedItem] = useState<ITodo>({} as ITodo);
 
   useEffect(() => {
     const data = todo.retrieveTodos();
@@ -28,19 +24,16 @@ const Main = () => {
   const renderTodos = () => {
     return (
       (todos?.length > 0 &&
-        todos?.map((todo, idx) => (
-          <Draggable key={todo.id} draggableId={todo.id} index={idx}>
-            {(provided) => (
-              <Card
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
-                update={update}
-                remove={handleDelete}
-                todo={todo}
-              />
-            )}
-          </Draggable>
+        todos?.map((todo) => (
+          <Card
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            key={todo.id}
+            update={update}
+            remove={handleDelete}
+            todo={todo}
+          />
         ))) || <div></div>
     );
   };
@@ -61,32 +54,45 @@ const Main = () => {
     setTodos(newList);
   };
 
-  const onDragEnd = (result: DropResult) => {
-    console.log(result);
-    if (!result.destination) return;
+  const handleDragStart = (
+    _e: React.DragEvent<HTMLDivElement>,
+    item: ITodo
+  ) => {
+    setDraggedItem(item);
+  };
 
-    const items = Array.from(todos);
-    const [reorderedItems] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItems);
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
 
-    setTodos(items);
+  const handleDrop = (
+    _e: React.DragEvent<HTMLDivElement>,
+    targetItem: ITodo
+  ) => {
+    const updatedTodos = [...todos];
+    const draggedIndex = updatedTodos.findIndex(
+      (todo) => todo.id === draggedItem.id
+    );
+    const targetIndex = updatedTodos.findIndex(
+      (todo) => todo.id === targetItem.id
+    );
+
+    updatedTodos[draggedIndex] = targetItem;
+    updatedTodos[targetIndex] = draggedItem;
+    todo.addTodo(updatedTodos);
+    setTodos(updatedTodos);
+
+    setDraggedItem({} as ITodo);
   };
 
   return (
     <Wrapper>
       <Input add={handleNewTodo} />
-      <div className="">
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="todos">
-            {(provided) => (
-              <CardWrapper {...provided.droppableProps} ref={provided.innerRef}>
-                <>{renderTodos()}</>
-                <>{provided.placeholder}</>
-              </CardWrapper>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </div>
+      <>
+        <CardWrapper>
+          <>{renderTodos()}</>
+        </CardWrapper>
+      </>
     </Wrapper>
   );
 };
