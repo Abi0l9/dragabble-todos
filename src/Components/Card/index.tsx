@@ -45,7 +45,7 @@ const Card = ({
       <input
         type="radio"
         id={id}
-        className="rounded-full cursor-pointer"
+        className="rounded-full cursor-pointer accent-pink-700"
         checked={completed}
         value={value ? "" : ""}
         onClick={() => update(id)}

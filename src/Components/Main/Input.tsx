@@ -21,11 +21,6 @@ const Input = ({ add }: Props) => {
     const key = target.name;
     const value = target.value;
 
-    // if (target.name === "completed" && target.checked) {
-    //   setValue(true);
-    //   setData({ ...data, completed: true });
-    // } else
-
     setData({ ...data, [key]: value });
   };
 
@@ -68,7 +63,7 @@ const Input = ({ add }: Props) => {
             type="radio"
             name="completed"
             id="completed"
-            className="w-4"
+            className="w-4 accent-pink-700"
             value={data.completed ? "" : ""}
             checked={data.completed}
             onChange={handleSelection}
