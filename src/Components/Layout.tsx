@@ -4,12 +4,16 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { ITodo } from "../types";
 import todo from "../services/todo";
+import day from "./../assets/mountain .jpg";
+import night from "./../assets/night.jpg";
+import useTheme from "../hooks/useTheme";
 
 export type State = "completed" | "active" | "all";
 
 const Layout = () => {
   const [todos, setTodos] = useState<ITodo[]>([]);
   const [draggedItem, setDraggedItem] = useState<ITodo>({} as ITodo);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const data = todo.retrieveTodos();
@@ -87,19 +91,38 @@ const Layout = () => {
     }
   };
 
+  const clear = () => {
+    const data = todo.clearCompleted();
+    setTodos(data);
+  };
+
   return (
-    <div className="">
+    <div className="font-sans">
+      <div className="w-full h-[240px] fixed">
+        <img
+          src={theme === "dark" ? night : day}
+          alt=""
+          className="w-full h-full"
+        />
+      </div>
+      <div
+        className={`w-full ${
+          theme === "dark" ? "bg-gradient-to-l" : "bg-gradient-to-r"
+        } from-purple-800 to-orange-800 opacity-50 h-[240px] fixed`}
+      ></div>
       <Header />
       <Main
         todos={todos}
+        getAll={getAll}
         updateTodo={update}
         deleteTodo={handleDelete}
         addNewTodo={handleNewTodo}
         dragTodo={handleDragStart}
         dragOverTodo={handleDragOver}
         dropTodo={handleDrop}
+        clear={clear}
       />
-      <Footer todos={todos} getAll={getAll} />
+      <Footer />
     </div>
   );
 };

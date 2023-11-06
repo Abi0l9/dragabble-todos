@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import del from "@iconify/icons-mdi/close";
 import drag from "@iconify/icons-mdi/drag";
 import { ITodo } from "../../types";
+import useTheme from "../../hooks/useTheme";
 
 type Props = {
   todo: ITodo;
@@ -23,6 +24,7 @@ const Card = ({
 }: Props) => {
   const { id, content, completed } = todo;
   const [value, setValue] = useState(false);
+  const { theme } = useTheme();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
@@ -36,7 +38,9 @@ const Card = ({
       onDragStart={(e) => onDragStart(e, todo)}
       onDragOver={onDragOver}
       onDrop={(e) => onDrop(e, todo)}
-      className="w-full flex flex-row items-center gap-x-3 cursor-pointer  bg-gray-100  p-2 rounded-md"
+      className={`w-full flex flex-row items-center gap-x-3 cursor-pointer   ${
+        theme === "dark" ? "bg-gray-800" : "bg-white"
+      }  p-2`}
     >
       <input
         type="radio"

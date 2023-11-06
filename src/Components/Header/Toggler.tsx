@@ -1,16 +1,17 @@
 import React from "react";
 import { Icon } from "@iconify/react";
-import moon from "@iconify/icons-mdi/star-crescent";
+import moon from "@iconify/icons-mdi/moon-waning-crescent";
+import sun from "@iconify/icons-mdi/white-balance-sunny";
 import useTheme from "../../hooks/useTheme";
 
 const Toggler = () => {
-  const { toggler } = useTheme();
+  const { theme, toggler } = useTheme();
   return (
     <div>
       <Icon
         onClick={toggler}
         className="cursor-pointer"
-        icon={moon}
+        icon={theme === "dark" ? sun : moon}
         width={24}
       />
     </div>

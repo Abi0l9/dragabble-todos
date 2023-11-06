@@ -6,7 +6,7 @@ import Wrapper from "../Wrapper";
 const Header = () => {
   return (
     <Wrapper>
-      <div className="w-full flex flex-row justify-between items-center">
+      <div className="w-full text-gray-100 z-50 flex flex-row justify-between items-center py-10">
         <Logo />
         <Toggler />
       </div>

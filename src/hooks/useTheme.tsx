@@ -1,20 +1,12 @@
-import { useState } from "react";
-
-export type Theme = "dark" | "light";
+import { useContext } from "react";
+import { ThemeContext } from "./ThemeContext";
 
 const useTheme = () => {
-  const [isDark, setIsDark] = useState(false);
-  const [theme, setTheme] = useState<Theme>("light");
-
-  const toggleMode = () => {
-    setIsDark(!isDark);
-
-    setTheme(isDark ? "dark" : "light");
-  };
+  const { theme, toggler } = useContext(ThemeContext);
 
   return {
     theme,
-    toggler: toggleMode,
+    toggler,
   };
 };
 

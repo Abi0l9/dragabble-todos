@@ -48,6 +48,14 @@ const deleteTodo = (id: string) => {
   return filteredList;
 };
 
+const clearCompleted = () => {
+  const allTodos = retrieveTodos();
+
+  const filteredList = allTodos?.filter((todo) => !todo.completed);
+  storeTodos(filteredList);
+  return filteredList;
+};
+
 export default {
   getAll,
   updateTodo,
@@ -56,4 +64,5 @@ export default {
   storeTodos,
   addTodo,
   deleteTodo,
+  clearCompleted,
 };

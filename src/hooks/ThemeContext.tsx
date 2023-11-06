@@ -1,5 +1,6 @@
-import React, { ReactNode, createContext } from "react";
-import useTheme, { Theme } from "./useTheme";
+import React, { ReactNode, createContext, useState } from "react";
+
+type Theme = "dark" | "light";
 
 type Props = {
   theme: Theme;
@@ -11,14 +12,20 @@ const defaultState: Props = {
   toggler: () => {},
 };
 
-const ThemeContext = createContext<Props>(defaultState);
+export const ThemeContext = createContext<Props>(defaultState);
 
 type ProviderProps = {
   children: ReactNode;
 };
 
 export const ThemeProvider = ({ children }: ProviderProps) => {
-  const { theme, toggler } = useTheme();
+  const [theme, setTheme] = useState<Theme>("light");
+
+  //   console.log(theme);
+  const toggler = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
   return (
     <ThemeContext.Provider value={{ theme, toggler }}>
       {children}

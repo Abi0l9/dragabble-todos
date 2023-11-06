@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import utils from "../../utils";
 import { ITodo } from "../../types";
+import useTheme from "../../hooks/useTheme";
 
 type Props = {
   add: (data: ITodo) => void;
@@ -12,6 +13,7 @@ const Input = ({ add }: Props) => {
     completed: false,
     content: "",
   });
+  const { theme } = useTheme();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target;
@@ -51,11 +53,15 @@ const Input = ({ add }: Props) => {
   };
 
   return (
-    <div className="">
+    <div
+      className={`drop-shadow-lg  ${
+        theme === "dark" ? "bg-gray-800 text-gray-100" : "bg-white"
+      } rounded-md`}
+    >
       <form
         onSubmit={handleSubmit}
         action=""
-        className="flex flex-col w-full p-3 py-1 rounded-md bg-gray-100"
+        className="flex flex-col w-full p-3 py-1 rounded-md"
       >
         <div className="flex flex-row gap-x-3">
           <input
