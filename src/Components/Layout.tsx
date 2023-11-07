@@ -49,9 +49,37 @@ const Layout = () => {
     e.preventDefault();
   };
 
+  const handleTouchStart = (item: ITodo) => {
+    setDraggedItem(item);
+  };
+
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     // e.preventDefault();
-    console.log(e);
+    const touchLocation = e.targetTouches[0];
+    const targetElement = document.elementFromPoint(
+      touchLocation.clientX,
+      touchLocation.clientY
+    );
+
+    const targetId = targetElement && targetElement.getAttribute("data-id");
+
+    const draggedIndex = todos.findIndex((todo) => todo.id === draggedItem.id);
+    const targetIndex = targetId
+      ? todos.findIndex((todo) => targetId === todo.id)
+      : -1;
+
+    // console.log(targetId, draggedItem);
+
+    if (draggedIndex !== targetIndex && targetIndex !== -1) {
+      const reorderedTodos = [...todos];
+      const itemToMove = reorderedTodos.splice(draggedIndex, 1)[0]; //remove the dragged item from its original pos
+      reorderedTodos.splice(targetIndex, 0, itemToMove);
+
+      todo.addTodo(reorderedTodos);
+      setTodos(reorderedTodos);
+
+      setDraggedItem({} as ITodo);
+    }
   };
 
   const handleDrop = (targetItem: ITodo) => {
@@ -119,6 +147,7 @@ const Layout = () => {
         dragTodo={handleDragStart}
         dragOverTodo={handleDragOver}
         dropTodo={handleDrop}
+        touchStart={handleTouchStart}
         touchDrag={handleTouchMove}
         clear={clear}
       />

@@ -17,6 +17,7 @@ type Props = {
   todos: ITodo[];
   getAll: (state: State) => void;
   clear: () => void;
+  touchStart: (item: ITodo) => void;
 };
 
 const Main = ({
@@ -26,6 +27,7 @@ const Main = ({
   dragTodo,
   dragOverTodo,
   dropTodo,
+  touchStart,
   touchDrag,
   todos,
   getAll,
@@ -43,6 +45,7 @@ const Main = ({
             onDragStart={dragTodo}
             onDragOver={dragOverTodo}
             onDrop={dropTodo}
+            touchStart={touchStart}
             onTouchDrag={touchDrag}
             key={todo.id}
             update={update}

@@ -13,6 +13,7 @@ type Props = {
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (targetItem: ITodo) => void;
   onTouchDrag: (e: React.TouchEvent<HTMLDivElement>) => void;
+  touchStart: (item: ITodo) => void;
 };
 
 const Card = ({
@@ -22,6 +23,7 @@ const Card = ({
   onDragStart,
   onDragOver,
   onDrop,
+  touchStart,
   onTouchDrag,
 }: Props) => {
   const { id, content, completed } = todo;
@@ -40,11 +42,12 @@ const Card = ({
       onDragStart={() => onDragStart(todo)}
       onDragOver={onDragOver}
       onDrop={() => onDrop(todo)}
-      onTouchStart={() => onDragStart(todo)}
+      onTouchStart={() => touchStart(todo)}
       onTouchMove={onTouchDrag}
       className={`w-full flex flex-row items-center gap-x-3 cursor-pointer   ${
         theme === "dark" ? "bg-gray-800" : "bg-white"
       }  p-2`}
+      data-id={todo.id}
     >
       <input
         type="radio"
